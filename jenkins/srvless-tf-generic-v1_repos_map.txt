@@ -1,0 +1,19 @@
+Map repos = [
+  a_repo: [ //1..n
+    url:            '<repo url>',
+    branch:         '<branch name>',
+    path:           '<clone-to path>',
+    has_submodules: <true/false>,  //optional
+    credentials:    <credentials>, //optional
+    projects: [ //optional
+      a_project: [ //1..n
+        path:        '<project path within repo>',
+        s3_key:      '<lambda s3 key name>',
+        is_web_app:  <true/false>, //optional
+        test: [ //optional
+          env_vars: '<comma separated list of env vars>'
+        ]
+      ]
+    ]
+  ]
+]
