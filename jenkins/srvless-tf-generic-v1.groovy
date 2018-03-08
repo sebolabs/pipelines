@@ -21,7 +21,6 @@ Map build_dirs = [
   assets:   'upload/assets',
   manifest: 'upload/manifests'
 ]
-Boolean contains_webapp_project = false
 //--------- SERVICE SPECIFIC REPOS MAP --------------
 Map repos = [
   terraform: [
@@ -37,7 +36,7 @@ Map repos = [
     projects: [
       frontend: [
         path: '',
-        s3_key: 'frontend',
+        lambda_s3_key: 'frontend',
         is_web_app: true,
         test: [
           env_vars: 'APPSECRET=12345'
@@ -53,15 +52,15 @@ Map repos = [
     projects: [
       transcode_service: [
         path: 'transcode-service',
-        s3_key: 'transcode_service'
+        lambda_s3_key: 'transcode_service'
       ],
       verify_service: [
         path: 'verify-service',
-        s3_key: 'verify_service'
+        lambda_s3_key: 'verify_service'
       ],
       upload_service: [
         path: 'upload-service',
-        s3_key: 'upload_service'
+        lambda_s3_key: 'upload_service'
       ]
     ]
   ]
@@ -119,40 +118,48 @@ node('slave') {
           Map packages_info = [:]
           packages_info[proj.key] = [:]
           if(proj.value['is_web_app']) {
-            contains_webapp_project = true
             app_build_steps[proj.key] = {
               packages_info[proj.key].packages = Tools.build_express_app(
                 "${env.WSPACE}/${repo.value['path']}/${proj.value['path']}",
-                proj.value['s3_key'],
-                'assets',
-                build_dirs['assets'],
+                proj.value['lambda_s3_key'],
+                proj.value['assets_s3_key'] ?: 'assets',
+                build_dirs[proj.value['assets_folder']] ?: build_dirs['assets'],
                 build_dirs['packages']
               )
-              Tools.update_lambda_key(manifest_path, proj.value['s3_key'], packages_info[proj.key].packages[proj.value['s3_key']])
-              Tools.update_lambda_key(manifest_path, 'assets', packages_info[proj.key].packages['assets'])
+              Tools.update_lambda_key(manifest_path, proj.value['lambda_s3_key'], packages_info[proj.key].packages[proj.value['lambda_s3_key']])
+              TFFunctions.update_lambda_key(
+                manifest_path,
+                proj.value['assets_s3_key'] ?: 'assets',
+                packages_info[proj.key].packages[proj.value['assets_s3_key']] ?: packages_info[proj.key].packages['assets']
+              )
+            }
+            // upload (assets)
+            upload_steps["${proj.key}-assets"] = {
+              AwsCliFunctions.s3_sync_folder(
+                build_dirs[proj.value['assets_folder']] ?: build_dirs['assets'],
+                tf_params['env_bucket_name'],
+                proj.value['assets_folder'] ?: 'assets',
+                assets_sync_options,
+                aws_region
+              )
             }
           } else {
             app_build_steps[proj.key] = {
               packages_info[proj.key].packages = Tools.build_nodejs_app(
                 "${env.WSPACE}/${repo.value['path']}/${proj.value['path']}",
-                proj.value['s3_key'],
+                proj.value['lambda_s3_key'],
                 build_dirs['packages']
               )
-              Tools.update_lambda_key(manifest_path, proj.value['s3_key'], packages_info[proj.key].packages[proj.value['s3_key']])
+              Tools.update_lambda_key(manifest_path, proj.value['lambda_s3_key'], packages_info[proj.key].packages[proj.value['lambda_s3_key']])
             }
           }
         }
       }
     }
 
-    // upload
+    // upload (packages)
     upload_steps['packages'] = {
       Tools.s3_sync_folder(build_dirs['packages'], tf_params['env_bucket_name'], 'packages')
-    }
-    if(contains_webapp_project) {
-      upload_steps['assets'] = { 
-        Tools.s3_sync_folder(build_dirs['assets'], tf_params['env_bucket_name'], 'assets')
-      }
     }
   }
 

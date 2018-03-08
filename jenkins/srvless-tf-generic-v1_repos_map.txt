@@ -3,13 +3,15 @@ Map repos = [
     url:            '<repo url>',
     branch:         '<branch name>',
     path:           '<clone-to path>',
-    has_submodules: <true/false>,  //optional
-    credentials:    <credentials>, //optional
+    has_submodules: <true/false>,      //optional, defaults to 'false'
+    credentials:    <credentials>,     //optional, defaults to 'null'
     projects: [ //optional
       a_project: [ //1..n
-        path:        '<project path within repo>',
-        s3_key:      '<lambda s3 key name>',
-        is_web_app:  <true/false>, //optional
+        path:          '<project path within repo>',
+        lambda_s3_key: '<lambda s3 key name>',
+        is_web_app:    <true/false>,                 //optional, defaults to 'false'
+        assets_folder: '<s3 assets folder name>',    //optional, defaults to 'assets' (supports multi-webapp services)
+        assets_s3_key: '<assets s3 key name>',       //optional, defaults to 'assets' (supports multi-webapp services)
         test: [ //optional
           env_vars: '<comma separated list of env vars>'
         ]
