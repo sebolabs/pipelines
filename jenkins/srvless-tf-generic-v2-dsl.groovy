@@ -10,7 +10,7 @@ pipelineJob('GenericDeclarativePipeline') {
   }
   steps {
     dsl {
-      external('srvless-tf-generic-v2-dsl.groovy')
+      external('jenkins/srvless-tf-generic-v2-dsl.groovy')
       removeAction('DELETE')
       removeViewAction('DELETE')
     }
