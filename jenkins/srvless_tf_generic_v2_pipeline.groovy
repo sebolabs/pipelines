@@ -1,18 +1,8 @@
-pipelineJob('GenericDeclarativePipeline') {
+pipelineJob('generic_declarative_pipeline') {
   displayName('Generic Declarative Pipeline')
-  scm {
-    git{
-      remote {
-        url('https://github.com/sebolabs/pipelines.git')
-        branch('jenkins-pipeline-v2') // TODO: change to master
-      }
-    }
-  }
-  steps {
-    dsl {
-      external('jenkins/srvless_tf_generic_v2_dsl.groovy')
-      removeAction('DELETE')
-      removeViewAction('DELETE')
+  definition {
+    cps {
+      script(readFileFromWorkspace('jenkins/dummy.groovy'))
     }
   }
   parameters {
