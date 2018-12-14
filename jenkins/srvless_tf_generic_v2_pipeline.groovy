@@ -1,8 +1,12 @@
 pipelineJob('generic_declarative_pipeline') {
   displayName('Generic Declarative Pipeline')
-  definition {
-    cps {
-      script(readFileFromWorkspace('jenkins/dummy.groovy'))
+  description('A generic declarative pipeline for Lambda powered APIs')
+  scm {
+    git{
+      remote {
+        url('https://github.com/sebolabs/pipelines.git')
+        branch('${PIPELINE_BRANCH}') // TODO: change to variable?
+      }
     }
   }
   parameters {
@@ -15,5 +19,6 @@ pipelineJob('generic_declarative_pipeline') {
     stringParam('TRANSCODER_BRANCH', 'master', '')
     stringParam('IMAGES_BRANCH', 'master', '')
     stringParam('TERRAFORM_BEANCH', 'terraform-mock', '')
+    stringParam('PIPELINE_BRANCH', 'jenkins-pipeline-v2', '')
   }
 }
