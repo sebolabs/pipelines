@@ -3,6 +3,7 @@ pipelineJob('generic_declarative_pipeline') {
   description('A generic declarative pipeline for Lambda powered APIs')
   definition {
     cpsScm {
+      lightweight(true)
       scm {
         git {
           remote {
@@ -11,6 +12,7 @@ pipelineJob('generic_declarative_pipeline') {
           branch('${PIPELINE_BRANCH}') // TODO: change to variable?
         }
       }
+      scriptPath('jenkins/dummy.groovy')
     }
   }
   parameters {
