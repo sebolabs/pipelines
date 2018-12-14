@@ -1,11 +1,13 @@
 pipelineJob('generic_declarative_pipeline') {
   displayName('Generic Declarative Pipeline')
   description('A generic declarative pipeline for Lambda powered APIs')
-  scm {
-    git{
-      remote {
-        url('https://github.com/sebolabs/pipelines.git')
-        branch('${PIPELINE_BRANCH}') // TODO: change to variable?
+  definition {
+    scm {
+      git {
+        remote {
+          url('https://github.com/sebolabs/pipelines.git')
+          branch('${PIPELINE_BRANCH}') // TODO: change to variable?
+        }
       }
     }
   }
