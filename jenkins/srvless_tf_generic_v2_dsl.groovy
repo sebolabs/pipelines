@@ -19,7 +19,7 @@ pipelineJob('GenericDeclarativePipeline') {
     activeChoiceParam('ENVIRONMENT') {
       choiceType('SINGLE_SELECT')
       groovyScript {
-          script("return ['INT', 'PREP', 'UAT', 'LIVE']")
+        script("return ['INT', 'PREP', 'UAT', 'LIVE'];")
       }
     }
     stringParam('TRANSCODER_BRANCH', 'master', '')
