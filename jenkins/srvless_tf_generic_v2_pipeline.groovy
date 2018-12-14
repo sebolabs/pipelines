@@ -3,16 +3,16 @@ pipelineJob('generic_declarative_pipeline') {
   description('A generic declarative pipeline for Lambda powered APIs')
   definition {
     cpsScm {
-      lightweight(false) // otherwise the branch variable won't work
+      lightweight(false) // false, otherwise the branch variable won't work
       scm {
         git {
           remote {
             url('https://github.com/sebolabs/pipelines.git')
           }
-          branch('$PIPELINE_BRANCH') // TODO: change to variable?
+          branch('$PIPELINE_BRANCH') // no curly brackets, otherwise won't be recognised
         }
       }
-      scriptPath('jenkins/dummy.groovy')
+      scriptPath('jenkins/srvless_tf_generic_v2.groovy')
     }
   }
   parameters {
