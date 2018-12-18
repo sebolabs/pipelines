@@ -1,0 +1,42 @@
+{
+  "terraform": {
+    "url": "https://github.com/<account>/<repo1>.git",
+    "branch": "${TERRAFORM_BRANCH}",
+    "dst_path": "terraform"
+  },
+  "transcoder": {
+    "url": "https://github.com/<account>/<repo2>.git",
+    "branch": "${TRANSCODER_BRANCH}",
+    "dst_path": "transcoder",
+    "projects": {
+      "transcoder": {
+        "src_path": "",
+        "terraform": {
+          "component": "backend",
+          "lambda_s3_key_var": "transcoder_s3_key"
+        }
+      }
+    }
+  },
+  "images": {
+    "url": "https://github.com/<account>/<repo3>.git",
+    "branch": "${IMAGES_BRANCH}",
+    "dst_path": "images",
+    "projects": {
+      "uploader": {
+        "src_path": "uploader",
+        "terraform": {
+          "component": "api",
+          "lambda_s3_key_var": "uploader_s3_key"
+        }
+      },
+      "verifier": {
+        "src_path": "verifier",
+        "terraform": {
+          "component": "backend",
+          "lambda_s3_key_var": "verifier_s3_key"
+        }
+      }
+    }
+  }
+}
