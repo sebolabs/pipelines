@@ -24,7 +24,7 @@ pipelineJob('generic_declarative_pipeline') {
     }
     stringParam('TRANSCODER_BRANCH', 'master', '')
     stringParam('IMAGES_BRANCH', 'master', '')
-    stringParam('TERRAFORM_BEANCH', 'terraform-mock', '')
+    stringParam('TERRAFORM_BRANCH', 'terraform-mock', '')
     stringParam('PIPELINE_BRANCH', 'jenkins-pipeline-v2', '') // because I can :P
   }
 }
